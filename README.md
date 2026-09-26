@@ -36,12 +36,31 @@ Static SPA (`base: './'`) — deployable to Vercel/Netlify/any static host, zero
 ## What to try (5-minute tour)
 
 1. Notice you start in **MVP**: three workflows lit, the rest of the destination architecture receded. Click **SCALE**, then **VISION**.
-2. **Run growth simulation** — six scenarios: acquisition, activation, retention, expansion, an **automation failure run** (outage → retries → fallback → escalation), and a **governance block run** where rules stop a confident AI recommendation. Pause / Step / Skip / Restart / 1.5× / ESC to exit; **Inspect** any step's raw event payload.
+2. **Run growth simulation** — **17 scripted scenarios** in three groups: the four core lifecycle runs (acquisition, activation, retention, expansion), a **vertical library of 10 more LatAm B2B categories** (see below), and three system runs — an **automation failure run** (outage → retries → fallback → escalation), a **governance block run** where rules stop a confident AI recommendation, and a **low-confidence run** where the engine abstains. Pause / Step / Skip / Restart / 1.5× / ESC to exit; **Inspect** any step's raw event payload.
 3. Click **any edge** — hover shows the payload; click opens the workflow inspector (steps, owners, latency, health, LLM cost).
 4. Open the **Account Graph** node — fire signals, watch scores and the next best action recompute, then use the **SDR Copilot**: committee, signal timeline, localized draft with provenance, and Approve / Edit / Research more / Assign / Skip.
 5. Open the **Growth lifecycle** node — behavioral event taxonomy, a live trigger rule, and the **SDR → AE handoff** (bad vs good).
 6. **Impact** — attribution-honest metrics and the experiment board, including a **killed** experiment.
 7. **Executive / Builder** toggle — same system, two audiences. **Sun/Moon** for light/dark; **⚡** toggles animation (OS reduced-motion sets the default).
+
+## Vertical scenario library — same engine, new categories
+
+The corporate-spend fintech is the default scenario; the engine itself is category-agnostic. The simulation menu's second group runs the same closed loop (signals → graph → orchestrator → playbook → channel → human gate → outcome → experiment → learning) across ten more LatAm B2B categories, each with its own ICP, buyer, signals and localized motion:
+
+| Run | Category · lane | Account (SIMULATED) |
+| --- | --- | --- |
+| HR-tech acquisition | payroll / HR SaaS · acquire | Cultura Eats — ghost kitchens, MX + CO |
+| Freight-tech retention | TMS / logistics SaaS · retain | Carga Directa — freight broker, MTY |
+| Payments acquisition | e-commerce payment orchestration · acquire | Moda Circular — DTC fashion, BR |
+| Insurtech expansion | embedded insurance · expand | Corredora Seguros del Valle — broker, CO |
+| Agtech activation | agro-inputs platform · activate | Agroinsumos San Pedro — distributor, MX |
+| Proptech retention | facilities / CAPEX SaaS · retain | Inmobiliaria Delta — property mgmt, MX |
+| Healthtech activation | occupational-health SaaS · activate | Clínicas Vitalia — clinic chain, CO |
+| Edtech expansion | corporate upskilling · expand | Grupo Meridiano — financial group, BR |
+| Compliance acquisition | security / compliance SaaS · acquire | Estudio Ferreyra — law firm, MX |
+| API-infrastructure retention | open-finance APIs · retain | Fintra — lending platform, BR |
+
+Every run keeps the operating rules of the prototype: deterministic gates where predictability matters, AI where probability helps, human approval before consequential actions, and a registered learning at the end.
 
 ## Data labeling (deliberate)
 
@@ -63,7 +82,8 @@ src/
     gtm.ts                  SDR copilot, handoff, lifecycle trigger rules
     details.ts              builder panel content (+ implementation stacks)
     details-exec.ts         executive briefs
-    simulations.ts          six scripted scenarios incl. failure & governance-block
+    simulations.ts          17 scripted scenarios: core loop, 10-vertical
+                             LatAm library, failure, governance block, abstain
   state/EngineContext.tsx   views, modes, stage, selection, simulation, ops feed
   components/
     canvas/                 graph, semantic packets, edge inspector, node views

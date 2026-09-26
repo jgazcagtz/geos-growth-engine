@@ -33,9 +33,11 @@ Switch to **Impact**. Point at the attribution chips: Attributed (holdout compar
 **3:30 — Operating it (Operations)**
 Switch to **Operations**: live feed, the approval queue with SLAs, automation health with failures/escalations/LLM cost. Note the Nova Retail item flips to **resolved** when its account reaches first value in the activation run — queues reflect current state, not history.
 
-**4:00 — Reusability (Account Graph → Account lab)**
-Open the **Account Graph** node → Account Lab → switch to **Mediterra Studios** (non-fintech SaaS fixture): same engine, same UI, trial milestones instead of card issuance.
-> "The growth logic isn't fintech-specific; the fixtures are."
+**4:00 — Reusability (vertical scenario library)**
+Open the simulation menu's second group: **ten more LatAm B2B categories** — HR-tech, freight, payments, insurtech, agtech, proptech, healthtech, edtech, compliance, API infrastructure — each a full loop with its own ICP, buyer and localized motion. Run one (e.g. **HR-tech acquisition — Cultura Eats**): same gates, same learning registration, different domain.
+> "The growth logic isn't category-specific; the fixtures are."
+
+The **Account Graph → Account Lab** makes the same point offline: switch to **Mediterra Studios** (non-fintech SaaS fixture) and the engine shows trial milestones instead of card issuance.
 
 Close with the Executive mode toggle (60-second narrative) if time allows.
 
@@ -50,7 +52,8 @@ src/
     layouts.ts             3 graph layouts (columns/orbit/loop) + runtime geometry
     architecture.ts        topology + build-stage maps (id-based, layout-agnostic)
     accounts.ts            synthetic fixtures (fintech + non-fintech) & scenario↔account
-    simulations.ts         7 scripted scenarios incl. failure, governance block, low-confidence
+    simulations.ts         17 scripted scenarios: core loop, 10-vertical LatAm
+                           library (payroll→API infra), failure, block, abstain
     workflows.ts           one inspectable automation per edge + EDGE_FLOW payloads
     impact.ts / metrics.ts attribution-honest metrics; ops feed templates
     gtm.ts                 SDR copilot, handoff object, lifecycle trigger rules
@@ -92,4 +95,4 @@ src/
 
 ## Verification notes
 
-Manual browser matrix executed: all 7 scenarios to terminal state (approve/modify/dismiss, block, failure, abstain); pause/step/restart/stop/reset; mid-run layout/language/theme/mode/stage switches; EN+ES across all views; 3 layouts at 1687×841, 1440×900, 1366×768, 1280×800, 1024 and 390 widths; dark+light; reduced-motion; console error-free. This document deliberately claims nothing beyond that.
+Manual browser matrix executed: all 7 core/governance scenarios to terminal state (approve/modify/dismiss, block, failure, abstain); pause/step/restart/stop/reset; mid-run layout/language/theme/mode/stage switches; EN+ES across all views; 3 layouts at 1687×841, 1440×900, 1366×768, 1280×800, 1024 and 390 widths; dark+light; reduced-motion; console error-free. The 10 vertical-library runs were added later and verified via type-check, production build, and targeted browser checks (payroll run end-to-end; grouped menu in EN+ES with scroll; micro-chip stacking above the open drawer; drawer alignment under a wrapped header at 1000px; light-theme accent contrast). This document deliberately claims nothing beyond that.

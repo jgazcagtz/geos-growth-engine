@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Moon, Play, RotateCcw, Sun, Zap, ZapOff } from 'lucide-react';
-import { SCENARIOS } from '../data/simulations';
+import { SCENARIOS, SCENARIO_GROUPS } from '../data/simulations';
 import { LANE_MAP } from '../data/lifecycles';
 import { useEngine } from '../state/EngineContext';
 import type { ViewId } from '../types';
@@ -21,6 +21,16 @@ const SCN_KEY: Record<ScenarioId, string> = {
   failure: 'scn.failure',
   blocked: 'scn.blocked',
   review: 'scn.review',
+  payroll: 'scn.payroll',
+  logistics: 'scn.logistics',
+  payments: 'scn.payments',
+  insurtech: 'scn.insurtech',
+  agtech: 'scn.agtech',
+  proptech: 'scn.proptech',
+  healthtech: 'scn.healthtech',
+  edtech: 'scn.edtech',
+  cyber: 'scn.cyber',
+  openfinance: 'scn.openfinance',
 };
 
 const SCN_SUMMARY_KEY: Record<ScenarioId, string> = {
@@ -31,6 +41,16 @@ const SCN_SUMMARY_KEY: Record<ScenarioId, string> = {
   failure: 'scn.failure.s',
   blocked: 'scn.blocked.s',
   review: 'scn.review.s',
+  payroll: 'scn.payroll.s',
+  logistics: 'scn.logistics.s',
+  payments: 'scn.payments.s',
+  insurtech: 'scn.insurtech.s',
+  agtech: 'scn.agtech.s',
+  proptech: 'scn.proptech.s',
+  healthtech: 'scn.healthtech.s',
+  edtech: 'scn.edtech.s',
+  cyber: 'scn.cyber.s',
+  openfinance: 'scn.openfinance.s',
 };
 
 export function Header() {
@@ -184,36 +204,43 @@ export function Header() {
                 transition={{ duration: 0.16 }}
               >
                 <div className="scenario-menu-head">{t('run.menuHead')}</div>
-                {SCENARIOS.map((s) => {
-                  const lane = LANE_MAP[s.lane];
-                  const isFailure = s.id === 'failure';
-                  const isBlocked = s.id === 'blocked';
-                  return (
-                    <button
-                      key={s.id}
-                      type="button"
-                      role="menuitem"
-                      className="scenario-menu-item"
-                      onClick={() => {
-                        setMenuOpen(false);
-                        setView('system');
-                        runScenario(s.id);
-                      }}
-                    >
-                      <span
-                        className="menu-lane-dot"
-                        style={{ background: isFailure || isBlocked ? 'var(--risk)' : lane.color }}
-                        aria-hidden
-                      />
-                      <span>
-                        <strong>
-                          {t(SCN_KEY[s.id])} — {s.account}
-                        </strong>
-                        <span>{t(SCN_SUMMARY_KEY[s.id])}</span>
-                      </span>
-                    </button>
-                  );
-                })}
+                {SCENARIO_GROUPS.map((group) => (
+                  <div key={group.key} className="scenario-group">
+                    <div className="scenario-group-head">{t(group.key)}</div>
+                    {group.ids.map((id) => {
+                      const s = SCENARIOS.find((sc) => sc.id === id);
+                      if (!s) return null;
+                      const lane = LANE_MAP[s.lane];
+                      const isFailure = s.id === 'failure';
+                      const isBlocked = s.id === 'blocked';
+                      return (
+                        <button
+                          key={s.id}
+                          type="button"
+                          role="menuitem"
+                          className="scenario-menu-item"
+                          onClick={() => {
+                            setMenuOpen(false);
+                            setView('system');
+                            runScenario(s.id);
+                          }}
+                        >
+                          <span
+                            className="menu-lane-dot"
+                            style={{ background: isFailure || isBlocked ? 'var(--risk)' : lane.color }}
+                            aria-hidden
+                          />
+                          <span>
+                            <strong>
+                              {t(SCN_KEY[s.id])} — {s.account}
+                            </strong>
+                            <span>{t(SCN_SUMMARY_KEY[s.id])}</span>
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ))}
               </motion.nav>
             ) : null}
           </AnimatePresence>

@@ -106,29 +106,34 @@ export function ArchitectureCanvas() {
 
             <GovernanceBar bootIndex={9} />
 
-            {/* micro-event: a tiny consequence appearing at the node where it lands */}
-            {step?.micro && microRect ? (
+            {/* edge hover preview — unscaled so it stays readable at any zoom */}
+            {tipInfo ? (
               <div
-                key={`${sim.stepIndex}-${step.micro}`}
-                className={`micro-chip mono${step.microTone === 'blocked' ? ' micro-chip--blocked' : ''}`}
-                style={{ left: microRect.x + microRect.w, top: microRect.y - 2 }}
+                className="edge-tip"
+                style={{ left: `calc(50% + ${tipInfo.pos.x}px)`, top: `calc(50% + ${tipInfo.pos.y}px)` }}
               >
-                {step.micro}
+                <span className="edge-tip-event mono">{tipInfo.flow.event}</span>
+                <span className="edge-tip-meta">
+                  {tipInfo.flow.latency} · {tipInfo.flow.mode}
+                </span>
+                <span className="edge-tip-open">click to inspect workflow</span>
               </div>
             ) : null}
           </div>
 
-          {/* edge hover preview — unscaled so it stays readable at any zoom */}
-          {tipInfo ? (
+          {/* micro-event chips render OUTSIDE the scaled stage-inner: they stay
+              readable at any zoom and float above the drawer/modal layer, so a
+              tag landing at a right-side node is never hidden behind a card */}
+          {step?.micro && microRect ? (
             <div
-              className="edge-tip"
-              style={{ left: `calc(50% + ${tipInfo.pos.x}px)`, top: `calc(50% + ${tipInfo.pos.y}px)` }}
+              key={`${sim.stepIndex}-${step.micro}`}
+              className={`micro-chip mono${step.microTone === 'blocked' ? ' micro-chip--blocked' : ''}`}
+              style={{
+                left: `calc(50% + ${(microRect.x + microRect.w - graph.w / 2) * scale}px)`,
+                top: `calc(50% + ${(microRect.y - 2 - graph.h / 2) * scale}px)`,
+              }}
             >
-              <span className="edge-tip-event mono">{tipInfo.flow.event}</span>
-              <span className="edge-tip-meta">
-                {tipInfo.flow.latency} · {tipInfo.flow.mode}
-              </span>
-              <span className="edge-tip-open">click to inspect workflow</span>
+              {step.micro}
             </div>
           ) : null}
         </>

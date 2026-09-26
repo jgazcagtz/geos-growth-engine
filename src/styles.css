@@ -27,6 +27,12 @@
   --accent-strong: #b0a3ff;
   --accent-soft: rgba(143, 123, 255, 0.13);
   --accent-line: rgba(143, 123, 255, 0.42);
+  --accent-hover: #9d8bff;
+  /* readable text on the accent fill */
+  --on-accent: #0d0b1a;
+  /* node-active pulse glows (kept as tokens so light theme matches its accent) */
+  --accent-glow-1: rgba(143, 123, 255, 0.08);
+  --accent-glow-2: rgba(143, 123, 255, 0.13);
 
   --lane-acquire: #7ea6ff;
   --lane-activate: #4fd6a5;
@@ -61,8 +67,25 @@
 
   --radius: 10px;
   --radius-sm: 7px;
-  --panel-w: 388px;
+  --panel-w: 420px;
   --header-h: 56px;
+
+  /* ------------------------- z-index scale ------------------------- *
+   * One documented ladder. Transient overlays that must never clip
+   * under chrome (micro-chips, edge tips, the sim bar) sit ABOVE the
+   * drawer/modal layer on purpose.                                   */
+  --zi-graph: 1; /* graph-internal ornaments */
+  --zi-node: 2; /* nodes & gov bar on the canvas */
+  --zi-node-flag: 3; /* badges pinned to a node */
+  --zi-node-sel: 5;
+  --zi-node-live: 6;
+  --zi-header: 40; /* app chrome */
+  --zi-panel: 40; /* drawer / modal layer */
+  --zi-float: 45; /* micro-chips, edge tips — above the drawer */
+  --zi-simbar: 46; /* the simulation controller */
+  --zi-toast: 50;
+  --zi-menu: 60; /* header dropdown menus */
+  --zi-tip: 80; /* terminology tooltips */
 }
 
 /* ------------------------------ light theme ------------------------------ */
@@ -88,6 +111,10 @@
   --accent-strong: #4f3cc9;
   --accent-soft: rgba(107, 86, 214, 0.09);
   --accent-line: rgba(107, 86, 214, 0.38);
+  --accent-hover: #5a47c9;
+  --on-accent: #ffffff;
+  --accent-glow-1: rgba(107, 86, 214, 0.1);
+  --accent-glow-2: rgba(107, 86, 214, 0.16);
 
   --lane-acquire: #2f66d0;
   --lane-activate: #0d8a62;
@@ -170,7 +197,7 @@ ul {
 }
 
 ::selection {
-  background: rgba(143, 123, 255, 0.32);
+  background: color-mix(in srgb, var(--accent) 32%, transparent);
 }
 
 ::-webkit-scrollbar {
@@ -231,7 +258,7 @@ ul {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.16s ease, transform 0.16s ease;
-  z-index: 80;
+  z-index: var(--zi-tip);
 }
 [data-tip]::before {
   content: '';
@@ -243,7 +270,7 @@ ul {
   border-top-color: var(--border);
   opacity: 0;
   transition: opacity 0.16s ease, transform 0.16s ease;
-  z-index: 81;
+  z-index: calc(var(--zi-tip) + 1);
   pointer-events: none;
 }
 [data-tip]:hover::after,
@@ -265,6 +292,7 @@ ul {
 /* ------------------------------ app shell ------------------------------ */
 
 .app {
+  position: relative;
   height: 100%;
   display: grid;
   grid-template-rows: var(--header-h) 1fr;
@@ -275,6 +303,7 @@ ul {
 }
 
 .main {
+  position: relative; /* anchors the drawer overlay below the header at every width */
   display: flex;
   min-height: 0;
 }
@@ -289,7 +318,7 @@ ul {
   border-bottom: 1px solid var(--border-soft);
   background: var(--header-bg);
   backdrop-filter: blur(8px);
-  z-index: 40;
+  z-index: var(--zi-header);
 }
 
 .brand {
@@ -304,7 +333,7 @@ ul {
   height: 30px;
   border-radius: 8px;
   background: var(--accent);
-  color: #0b0c10;
+  color: var(--on-accent);
   display: grid;
   place-items: center;
   font-weight: 800;
@@ -374,12 +403,12 @@ ul {
 .btn-primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #0d0b1a;
+  color: var(--on-accent);
   font-weight: 640;
 }
 .btn-primary:hover {
-  background: #9d8bff;
-  border-color: #9d8bff;
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 .btn-icon {
@@ -399,13 +428,15 @@ ul {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  width: 300px;
+  width: 348px;
+  max-height: min(72vh, 660px);
+  overflow-y: auto;
   background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 6px;
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
-  z-index: 60;
+  z-index: var(--zi-menu);
 }
 
 .scenario-menu-head {
@@ -415,6 +446,26 @@ ul {
   letter-spacing: 0.09em;
   color: var(--text-3);
   padding: 7px 10px 5px;
+}
+
+.scenario-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.scenario-group-head {
+  position: sticky;
+  top: 0;
+  z-index: var(--zi-node-flag);
+  background: var(--bg-panel);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  padding: 9px 10px 4px;
+  border-bottom: 1px solid var(--border-soft);
+  margin-bottom: 3px;
 }
 
 .scenario-menu-item {
@@ -511,7 +562,7 @@ ul {
 .stage-btn--on {
   background: var(--accent);
   border-color: var(--accent);
-  color: #0d0b1a;
+  color: var(--on-accent);
 }
 .stage-btn--lay {
   padding: 3px 9px;
@@ -524,9 +575,6 @@ ul {
 .legend-cmd svg {
   width: 11px;
   height: 11px;
-}
-:root[data-theme='light'] .stage-btn--on {
-  color: #ffffff;
 }
 .legend-hint {
   font-size: 10.5px;
@@ -610,7 +658,7 @@ ul {
   position: absolute;
   top: -8px;
   right: 8px;
-  z-index: 3;
+  z-index: var(--zi-node-flag);
   font-size: 8px;
   font-weight: 750;
   letter-spacing: 0.08em;
@@ -987,7 +1035,8 @@ ul {
   opacity: 0.24;
 }
 
-/* micro-event chips */
+/* micro-event chips — rendered in the unscaled stage overlay, ABOVE the
+   drawer/modal layer so a tag landing at any node stays visible */
 .micro-chip {
   position: absolute;
   transform: translate(6px, -50%);
@@ -999,7 +1048,8 @@ ul {
   border-radius: 5px;
   white-space: nowrap;
   pointer-events: none;
-  z-index: 7;
+  z-index: var(--zi-float);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
   animation: microLife 2.2s ease forwards;
 }
 @keyframes microLife {
@@ -1033,7 +1083,7 @@ ul {
   gap: 2px;
   pointer-events: none;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
-  z-index: 20;
+  z-index: var(--zi-float);
   min-width: 200px;
 }
 .edge-tip-event {
@@ -1216,7 +1266,7 @@ details.fold[open] summary {
   flex-direction: column;
   gap: 8px;
   transition: border-color 0.16s ease, background 0.16s ease, opacity 0.3s ease, box-shadow 0.16s ease;
-  z-index: 2;
+  z-index: var(--zi-node);
   animation: nodeBoot 0.42s ease backwards;
   animation-delay: calc(0.12s + var(--boot, 0) * 0.06s);
 }
@@ -1240,13 +1290,13 @@ details.fold[open] summary {
 .node--selected {
   border-color: var(--accent);
   box-shadow: 0 0 0 1px var(--accent-line), 0 14px 34px rgba(0, 0, 0, 0.38);
-  z-index: 5;
+  z-index: var(--zi-node-sel);
 }
 .node--active {
   border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent-line), 0 0 0 6px rgba(143, 123, 255, 0.08);
+  box-shadow: 0 0 0 1px var(--accent-line), 0 0 0 6px var(--accent-glow-1);
   animation: nodePulse 1.7s ease-in-out infinite;
-  z-index: 6;
+  z-index: var(--zi-node-live);
 }
 .node--dim {
   opacity: 0.32;
@@ -1258,10 +1308,10 @@ details.fold[open] summary {
 @keyframes nodePulse {
   0%,
   100% {
-    box-shadow: 0 0 0 1px var(--accent-line), 0 0 0 4px rgba(143, 123, 255, 0.05);
+    box-shadow: 0 0 0 1px var(--accent-line), 0 0 0 4px var(--accent-glow-1);
   }
   50% {
-    box-shadow: 0 0 0 1.5px var(--accent), 0 0 0 9px rgba(143, 123, 255, 0.13);
+    box-shadow: 0 0 0 1.5px var(--accent), 0 0 0 9px var(--accent-glow-2);
   }
 }
 
@@ -1413,7 +1463,7 @@ details.fold[open] summary {
   border-radius: 5px;
   padding: 2px 5px;
   white-space: nowrap;
-  z-index: 1;
+  z-index: var(--zi-graph);
 }
 
 .score-list {
@@ -1879,7 +1929,7 @@ details.fold[open] summary {
   gap: 10px;
   padding: 0 14px;
   transition: border-color 0.16s ease, background 0.16s ease, opacity 0.3s ease;
-  z-index: 2;
+  z-index: var(--zi-node);
 }
 .gov-bar:hover {
   border-color: var(--border-strong);
@@ -1931,19 +1981,21 @@ details.fold[open] summary {
 /* ------------------------------ detail panel ------------------------------ */
 
 /* The drawer is an overlay at every width: closing it actually closes it,
-   and the canvas reclaims the full viewport. */
+   and the canvas reclaims the full viewport. It anchors to .main (position:
+   relative) so it always starts below the header — even when the header
+   wraps to two rows on narrow viewports. */
 .panel-col {
-  position: fixed;
-  top: var(--header-h);
+  position: absolute;
+  top: 0;
   right: 0;
   bottom: 0;
-  width: min(420px, calc(100vw - 24px));
+  width: min(var(--panel-w), calc(100vw - 24px));
   border-left: 1px solid var(--border);
   background: var(--bg-panel);
   display: flex;
   flex-direction: column;
   min-height: 0;
-  z-index: 40;
+  z-index: var(--zi-panel);
   transform: translateX(105%);
   transition: transform 0.26s ease;
   box-shadow: -24px 0 60px rgba(0, 0, 0, 0.45);
@@ -2612,7 +2664,7 @@ details.fold[open] summary {
   margin: 0 auto;
   bottom: 14px;
   width: min(620px, calc(100% - 28px));
-  z-index: 25;
+  z-index: var(--zi-simbar);
 }
 
 /* gliding card — slides toward the active node during a run */
@@ -2731,7 +2783,7 @@ details.fold[open] summary {
   display: flex;
   flex-direction: column;
   gap: 7px;
-  z-index: 50;
+  z-index: var(--zi-toast);
   pointer-events: none;
 }
 
@@ -2869,7 +2921,7 @@ details.fold[open] summary {
 
 @media (max-width: 1240px) {
   :root {
-    --panel-w: 340px;
+    --panel-w: 380px;
   }
 }
 
@@ -2911,6 +2963,9 @@ details.fold[open] summary {
 
 /* ------------------------------ reduced motion ------------------------------ */
 
+/* Motion is state-driven only: the OS preference sets the app's default and
+   the in-app ⚡ toggle overrides it (see EngineContext). A hard OS media
+   query here would fight that toggle, so it is intentionally absent. */
 .reduce-motion *,
 .reduce-motion *::before,
 .reduce-motion *::after {
@@ -2919,23 +2974,9 @@ details.fold[open] summary {
   transition-duration: 0.01ms !important;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
 /* ============================================================
    Operations · Impact · workflows · copilot — operating-system layer
    ============================================================ */
-
-.app {
-  position: relative;
-}
 
 /* ------------------------------ header: tabs & mode ------------------------------ */
 
@@ -3463,7 +3504,7 @@ details.fold[open] summary {
   transform: translateY(-50%);
   color: var(--text-3);
   font-size: 11px;
-  z-index: 1;
+  z-index: var(--zi-graph);
 }
 .loop-stage:last-child::after {
   content: none;
@@ -3648,7 +3689,7 @@ details.fold[open] summary {
   left: 18px;
   bottom: -11px;
   color: var(--text-3);
-  z-index: 1;
+  z-index: var(--zi-graph);
 }
 
 .wf-health-grid {
@@ -4158,7 +4199,7 @@ details.fold[open] summary {
   outline: none;
 }
 .edge-hit:focus-visible {
-  stroke: rgba(143, 123, 255, 0.5);
+  stroke: var(--accent-line);
   stroke-width: 2;
 }
 .edge--selected {
@@ -4216,9 +4257,6 @@ details.fold[open] summary {
     padding-bottom: 8px;
     height: auto;
     row-gap: 8px;
-  }
-  :root {
-    --header-h: 56px;
   }
   .app {
     grid-template-rows: auto 1fr;

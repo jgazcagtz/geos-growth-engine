@@ -22,7 +22,7 @@ export function SimulationBar() {
     const t = window.setTimeout(() => {
       const region = document.querySelector('.canvas-region');
       const node =
-        document.querySelector(`[data-vnode="${sim.activeNode}"]`) ??
+        document.querySelector(`[data-nodeid="${sim.activeNode}"]`) ??
         document.querySelector('.node--active');
       if (!region || !node) return;
       const rr = region.getBoundingClientRect();

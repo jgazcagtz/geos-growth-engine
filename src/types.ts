@@ -56,7 +56,18 @@ export type ScenarioId =
   | 'expansion'
   | 'failure'
   | 'blocked'
-  | 'review';
+  | 'review'
+  /* vertical scenario library — same engine, different LatAm B2B categories */
+  | 'payroll'
+  | 'logistics'
+  | 'payments'
+  | 'insurtech'
+  | 'agtech'
+  | 'proptech'
+  | 'healthtech'
+  | 'edtech'
+  | 'cyber'
+  | 'openfinance';
 
 /** Top-level perspectives of the operating system. */
 export type ViewId = 'system' | 'ops' | 'impact';
