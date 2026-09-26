@@ -83,3 +83,9 @@ src/
 ## Note
 
 An interview prototype: identify growth bottlenecks, build systems that remove them, keep rules deterministic, AI probabilistic and humans in the loop — then prove with data whether it worked.
+
+## Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjgazcagtz%2Fgeos-growth-engine&project-name=geos-growth-engine&repository-name=geos-growth-engine)
+
+Zero-config Vite static build — Vercel auto-detects the framework. Or run `npx vercel --prod` from this directory.
